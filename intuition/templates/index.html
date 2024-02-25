@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Detection Counts</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+    }
+    .container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+    table {
+        width: 30%; /* Reduced from 45% to make table smaller */
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        background-color: #fff;
+    }
+    th, td {
+        padding: 5px; /* Reduced padding for thinner columns */
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd; /* Added right border for column lines */
+
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #f5f5f5;
+    }
+    .pie-chart {
+        width: 60%; /* Increased from 45% to make pie chart bigger */
+        text-align: center;
+    }
+</style>    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        table {
+            width: 35%;
+            border-collapse: collapse;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .pie-chart {
+            width: 50%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Class Detection Counts</h1>
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Number of Detections</th>
+                    <th>Independent Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                   <td>{{ row[0] }}</td>
+                   <td>{{ row[1] }}</td>
+                   <td>{{ independent_values[loop.index0] }}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pie-chart">
+            <h2>Detections Distribution</h2>
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script>
+        var labels = [];
+        var data = [];
+        {% for row in data %}
+            labels.push('{{ row[0] }}');
+            data.push('{{ row[1] }}');
+        {% endfor %}
+        var ctx = document.getElementById('pieChart').getContext('2d');
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Detections Distribution',
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)'
+                    ],
+                    data: data
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+</body>
+</html>

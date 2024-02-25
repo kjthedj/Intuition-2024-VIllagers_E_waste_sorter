@@ -1,0 +1,12 @@
+import serial
+import time
+
+arduino = serial.Serial('COM3', 9600)  # Replace 'COM3' with your Arduino's serial port
+time.sleep(2)  # Wait for the connection to establish
+
+def rotate_and_drop(n):
+    arduino.write(str(n).encode())
+    time.sleep(2)  # Wait for the operation to complete
+
+n = int(input("Enter the number of 90-degree rotations (0-4): "))
+rotate_and_drop(n)

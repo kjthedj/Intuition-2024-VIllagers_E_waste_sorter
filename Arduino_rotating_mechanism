@@ -1,0 +1,45 @@
+#include <Stepper.h>
+
+const int stepsPerRevolution = 200;  // change this to fit the number of steps per revolution for your motor
+Stepper stepper(stepsPerRevolution, 8, 9, 10, 11);  // change pin numbers to match your setup
+
+int actuatorPin = 12; // change as per your setup
+
+void setup() {
+  stepper.setSpeed(60); // set the speed at 60 rpm
+  pinMode(actuatorPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    int n = Serial.parseInt();
+
+    if (n == 4) {
+      // Activate dropping mechanism
+      drop();
+    } else {
+      for (int i = 0; i < n; i++) {
+        rotate90Degrees();
+      }
+      // Activate dropping mechanism after rotation
+      drop();
+      // Return to initial position
+      rotateToInitial();
+    }
+  }
+}
+
+void rotate90Degrees() {
+  stepper.step(stepsPerRevolution / 4);  // rotate 90 degrees
+}
+
+void rotateToInitial() {
+  stepper.step(-stepsPerRevolution / 4); // Rotate back to initial position
+}
+
+void drop() {
+  digitalWrite(actuatorPin, HIGH); // Activate linear actuator
+  delay(1000); // Adjust delay as needed
+  digitalWrite(actuatorPin, LOW); // Deactivate linear actuator
+}
